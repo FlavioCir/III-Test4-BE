@@ -1,7 +1,11 @@
 package dao;
 
-import javax.persistence.EntityManager;
+import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import entities.Evento;
 import entities.Partecipazione;
 import utils.JpaUtil;
 
@@ -32,6 +36,20 @@ public class PartecipazioneDAO extends JpaUtil {
 			em.close();
 		}
 
+	}
+	
+	public List<Partecipazione> getPartecipazioniDaConfermarePerEvento(Evento evento) {
+		EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			Query query = em.createNamedQuery("partecipazioniDaConfermarePerEvento");
+
+			query.setParameter("evento", evento);
+			return query.getResultList();
+
+		} finally {
+			em.close();
+		}
 	}
 	
 }

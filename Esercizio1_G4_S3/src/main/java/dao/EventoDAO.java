@@ -1,14 +1,21 @@
 package dao;
 
+import java.util.List;
+
+import javax.persistence.Query;
 import javax.persistence.EntityManager;
 
 import entities.Concerto;
 import entities.Evento;
+import entities.GaraDiAtletica;
+import entities.Genere;
+import entities.PartitaDiCalcio;
+import entities.Persona;
 import utils.JpaUtil;
 
 public class EventoDAO extends JpaUtil {
 
-	public void saveEvento(Evento ev) {
+	public void save(Evento ev) {
 		
 		try {
 			
@@ -21,6 +28,106 @@ public class EventoDAO extends JpaUtil {
 			System.out.println( "ERRORE durante l'inserimento dell'evento!!" );
 		}
 		
+	}
+	
+	public List<Concerto> getConcertiInStreaming(boolean inStreaming) {
+		try {
+			
+			Query query = em.createNamedQuery("concertiInStreaming");
+			
+			query.setParameter("streaming", inStreaming);
+			System.out.println( query.getResultList().toString() );
+			return query.getResultList();
+			
+		} finally {
+		}
+	}
+	
+	public List<Concerto> getConcertoPerGenere(Genere genere) {
+		try {
+			
+			Query query = em.createNamedQuery("concertiPerGenere");
+			
+			query.setParameter("listagenere", genere);
+			System.out.println( query.getResultList().toString() );
+			return query.getResultList();
+			
+		} finally {
+		}
+	}
+	
+	public List<PartitaDiCalcio> getPartiteVinteInCasa() {
+		return executeNamedQuery("partiteVinteInCasa", PartitaDiCalcio.class);
+	}
+
+	public List<PartitaDiCalcio> getPartiteVinteInTrasferta() {
+		return executeNamedQuery("partiteVinteInTrasferta", PartitaDiCalcio.class);
+	}
+
+	public List<PartitaDiCalcio> getPartitePareggiate() {
+		return executeNamedQuery("partitePareggiate", PartitaDiCalcio.class);
+	}
+
+	private <T> List<T> executeNamedQuery(String namedQuery, Class<T> returnClass) {
+		EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			Query query = em.createNamedQuery(namedQuery);
+
+			return query.getResultList();
+
+		} finally {
+			em.close();
+		}
+	}
+	
+	public List<Evento> getEventiPerInvitato(Persona invitato) {
+		EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			Query query = em.createNamedQuery("eventiPerInvitato");
+
+			query.setParameter("persona", invitato);
+			return query.getResultList();
+
+		} finally {
+			em.close();
+		}
+	}
+	
+	
+	public List<GaraDiAtletica> getGareDiAtleticaPerVincitore(Persona vincitore) {
+		EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			Query query = em.createNamedQuery("garePerVincitore");
+
+			query.setParameter("persona", vincitore);
+			return query.getResultList();
+
+		} finally {
+			em.close();
+		}
+	}
+	
+	public List<Evento> getEventiSoldout(){
+		
+		return executeNamedQuery("eventiSoldout", Evento.class);
+
+	}
+		
+	public List<GaraDiAtletica> getGareDiAtleticaPerPartecipante(Persona partecipante) {
+		EntityManager em = JpaUtil.getEntityManagerFactory().createEntityManager();
+		try {
+
+			Query query = em.createNamedQuery("garePerPartecipante");
+
+			query.setParameter("persona", partecipante);
+			return query.getResultList();
+
+		} finally {
+			em.close();
+		}
 	}
 	
 	public static void getEventoById(int id) {

@@ -1,6 +1,7 @@
 package dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import entities.Location;
 import utils.JpaUtil;

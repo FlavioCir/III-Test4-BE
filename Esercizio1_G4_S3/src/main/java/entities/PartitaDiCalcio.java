@@ -1,39 +1,24 @@
 package entities;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.NamedQuery;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
+@NamedQuery(name = "partiteVinteInCasa", query = "SELECT p FROM PartitaDiCalcio p WHERE p.squadraVincente = p.squadraDiCasa")
+@NamedQuery(name = "partiteVinteInTrasferta", query = "SELECT p FROM PartitaDiCalcio p WHERE p.squadraVincente = p.squadraOspite")
+@NamedQuery(name = "partitePareggiate", query = "SELECT p FROM PartitaDiCalcio p WHERE p.squadraVincente IS NULL")
 public class PartitaDiCalcio extends Evento {
 	
 	private String squadraDiCasa;
 	private String squadraOspite;
 	private String squadraVincente;
 	
-	private int goalSquadraCasa;
-	private int goalSquadraOspite;
-	
-	public PartitaDiCalcio(String titolo, LocalDate dataEvento, String descrizione, TipoEvento tipoEvento,
-			int numeroMaxPartecipanti, Location location, String squadraDiCasa,
-			String squadraOspite, String squadraVincente, int goalSquadraCasa, int goalSquadraOspite) {
-		super(titolo, dataEvento, descrizione, tipoEvento, numeroMaxPartecipanti, location);
-		this.squadraDiCasa = squadraDiCasa;
-		this.squadraOspite = squadraOspite;
-		this.squadraVincente = squadraVincente;
-		this.goalSquadraCasa = goalSquadraCasa;
-		this.goalSquadraOspite = goalSquadraOspite;
-	}
+	private int goalSquadraCasa = 0;
+	private int goalSquadraOspite = 0;
 		
 }

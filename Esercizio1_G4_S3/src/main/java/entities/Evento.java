@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,23 +13,19 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
-@Table(name = "eventi")
 @Getter
 @Setter
-@ToString
-@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@NamedQuery(name = "eventiSoldout", query = "SELECT e FROM Evento e WHERE SIZE(e.setPartecipazioni) >= e.numeroMaxPartecipanti")
+@NamedQuery(name="eventiPerInvitato", query = "SELECT e FROM Evento e WHERE EXISTS(SELECT 1 FROM e.setPartecipazioni p WHERE p.persona = :persona)")
 public class Evento {
 
 	@Id
@@ -47,19 +41,9 @@ public class Evento {
 	private int numeroMaxPartecipanti;
 	
 	@OneToMany(mappedBy = "evento", cascade = CascadeType.REMOVE)
-	private Set<Partecipazione> setPartecipazione;
+	private Set<Partecipazione> setPartecipazioni;
 	
 	@ManyToOne
 	private Location location;
-
-	public Evento(String titolo, LocalDate dataEvento, String descrizione, TipoEvento tipoEvento,
-			int numeroMaxPartecipanti, Location location) {
-		this.titolo = titolo;
-		this.dataEvento = dataEvento;
-		this.descrizione = descrizione;
-		this.tipoEvento = tipoEvento;
-		this.numeroMaxPartecipanti = numeroMaxPartecipanti;
-		this.location = location;
-	}
 
 }

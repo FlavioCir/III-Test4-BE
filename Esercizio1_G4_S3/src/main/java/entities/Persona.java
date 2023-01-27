@@ -13,13 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "persona")
 @Getter
 @Setter
 public class Persona {
@@ -31,14 +29,14 @@ public class Persona {
 	
 	private String nome;
 	private String cognome;
-	private String email;
 	private LocalDate datadinascita;
+	private String email;
 	
 	@Enumerated(EnumType.STRING)
 	private Sesso sesso;
 	
 	@OneToMany(mappedBy = "persona", cascade = CascadeType.REMOVE)
 	@OrderBy(value = "evento.dataEvento")
-	private List<Partecipazione> listaPartecipazione;
+	private List<Partecipazione> listaPartecipazioni;
 	
 }

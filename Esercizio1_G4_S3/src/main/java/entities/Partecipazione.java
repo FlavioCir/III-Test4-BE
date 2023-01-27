@@ -1,7 +1,5 @@
 package entities;
 
-import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -9,16 +7,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "partecipazione")
 @Getter
 @Setter
+@NamedQuery(name = "partecipazioniDaConfermarePerEvento", query = "SELECT p FROM Partecipazione p WHERE p.stato = entities.Stato.DA_CONFERMARE AND p.evento = :evento")
 public class Partecipazione {
 
 	@Id
